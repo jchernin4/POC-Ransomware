@@ -6,3 +6,4 @@ build
 
 /src/main/java/ransomware/testfiles
 encryptedFiles.list
+/testfiles/
