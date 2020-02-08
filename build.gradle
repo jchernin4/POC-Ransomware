@@ -10,7 +10,7 @@ plugins {
 
 apply plugin: 'application'
 
-mainClassName = 'ransomware.UtilsDriver'
+mainClassName = 'ransomware.Driver'
 
 repositories {
     mavenCentral()

