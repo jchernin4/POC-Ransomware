@@ -21,7 +21,7 @@ public class Driver {
     public static void main(String[] args) throws Exception {
         HTTPClient Client = new HTTPClient();
         File folder = new File(folderPath);
-        String key = generateKey();
+        key = generateKey();
         System.out.println(key);
 
         Collection<File> fileArray = FileUtils.listFiles(folder, extensions, true);
