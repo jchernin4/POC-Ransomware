@@ -50,9 +50,9 @@ public class Driver {
             }
         }
         // File tempFile1 = new
-        // File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AK.jpg.encrypted");
+        // File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/Space.jpg.encrypted");
         // File tempDec1 = new
-        // File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/AKDECRYPTED.jpg");
+        // File("D:/Coding/POC-Ransomware/src/main/java/ransomware/testfiles/SpaceDECRYPTED.jpg");
         // decryptFile(key, tempFile1, tempDec1);
 
         try {
